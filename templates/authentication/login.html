@@ -1,1 +1,24 @@
 <h2>Login</h2>
+<div class="card bg-dark p-3">
+<form action ="/controller/signup" methpd="post">
+    {% csrf_token %}
+    <br>
+    <label for ="email">Email</label>
+    <div class="form-group">
+        <input type = "email" class="form-control" id="email" required/>
+    </div>
+    <label for ="pass1">Password</label>
+    <div class="form-group">
+        <input type = "password" class="form-control" id="pass1" name="pass1" required/>
+    </div>
+    <label for ="pass2">Password</label>
+    <div class="form-group">
+        <input type = "password" class="form-control" id="pass2" name="pass2" required/>
+    </div>
+    <br>
+    <button type="submit" class="btn">Sign Up</button>
+    <br>
+    Already a User? <a href="/controller/login">Login</a>
+    <br>
+</form>
+</div>

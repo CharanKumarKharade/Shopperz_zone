@@ -1,24 +1,89 @@
-<h2>Login</h2>
-<div class="card bg-dark p-3">
-<form action ="/controller/signup" methpd="post">
-    {% csrf_token %}
-    <br>
-    <label for ="email">Email</label>
-    <div class="form-group">
-        <input type = "email" class="form-control" id="email" required/>
-    </div>
-    <label for ="pass1">Password</label>
-    <div class="form-group">
-        <input type = "password" class="form-control" id="pass1" name="pass1" required/>
-    </div>
-    <label for ="pass2">Password</label>
-    <div class="form-group">
-        <input type = "password" class="form-control" id="pass2" name="pass2" required/>
-    </div>
-    <br>
-    <button type="submit" class="btn">Sign Up</button>
-    <br>
-    Already a User? <a href="/controller/login">Login</a>
-    <br>
-</form>
+{% extends 'authentication/baseauth.html' %}
+{% comment %} {% extends 'authentication/baseauth.html' %}
+{% block title %}
+Login
+{% endblock title %}
+{% block bodyforms %}
+<div class="card bg-white p-5 ">
+    <h3 class="text-dark">Login</h3>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-warning alert-dismissible fade show"  > 
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <form action ="/controller/login" method="POST">
+        {% csrf_token %}
+        <br>
+        <label for="email">Email</label>
+        <div class="form-group">
+            <input type="email" class="form-control p-2" id="email" name="email" required />
+        </div>
+        <label for ="pass1">Password</label>
+        <div class="form-group">
+            <input type = "password" class="form-control p-2" id="pass1" name="pass1" required/>
+        </div>
+        <br>
+        <button type="submit" class="btn btn-dark">Login</button>
+        <br>
+        New User? <a href="/controller/signup">SignUp</a>
+        <br>
+    </form>
 </div>
+{% endblock bodyforms %} {% endcomment %}
+
+
+
+
+{% block title %}
+    Login
+{% endblock title %}
+
+{% block bodyforms %}
+<div class="card bg-white p-5">
+    <h3 class="text-dark">Login</h3>
+    
+    {% if messages %}
+    <div class="container mt-3">
+        {% for message in messages %}
+            <div class="alert 
+                {% if message.tags == 'success' %}
+                    alert-success
+                {% elif message.tags == 'error' %}
+                    alert-danger
+                {% elif message.tags == 'info' %}
+                    alert-info
+                {% elif message.tags == 'warning' %}
+                    alert-warning
+                {% endif %}
+                alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+
+    <form action="/controller/login/" method="POST">
+        {% csrf_token %}
+        <br>
+        <label for="email">Email</label>
+        <div class="form-group">
+            <input type="email" class="form-control p-2" id="email" name="email" required />
+        </div>
+        <label for="pass1">Password</label>
+        <div class="form-group">
+            <input type="password" class="form-control p-2" id="pass1" name="pass1" required/>
+        </div>
+        <br>
+        <button type="submit" class="btn btn-dark">Login</button>
+        <br>
+        New User? <a href="/controller/signup">SignUp</a>
+        <br>
+    </form>
+</div>
+{% endblock bodyforms %}

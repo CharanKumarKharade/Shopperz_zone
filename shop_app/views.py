@@ -1,36 +1,24 @@
 from math import ceil
 from django.shortcuts import redirect, render
+
 from . import models
 from django.contrib import messages
 # Create your views here.
 def index(request):
-    allProds = []
-    
-    # Get distinct categories
-    catProds = models.Product.objects.values('category','id')
-    print(catProds)
-    # Create a set of unique categories
-    cats = {item['category'] for item in catProds}
-    
-    # Loop through each category
-    for cat in cats:
-        prod = models.Product.objects.filter(category=cat)
-        n = len(prod)
-        
-        # Calculate the number of slides (pages) for each category
-        nSlides = (n + 3) // 4  # Rounded up division by 4
-        
-        # Append the products and slide information to allProds
-        allProds.append({
-            'products': prod,
-            'range': range(1, nSlides + 1),  # Range starts from 1 to nSlides
-            'nSlides': nSlides
-        })
-    
-    # Pass the data to the template
-    params = {'allProds': allProds}
-    return render(request, "index.html", params)
 
+    allProds = []
+    catprods = models.Product.objects.values('category','id')
+    print(catprods)
+    cats = {item['category'] for item in catprods}
+    for cat in cats:
+        prod= models.Product.objects.filter(category=cat)
+        n=len(prod)
+        nSlides = n // 4 + ceil((n / 4) - (n // 4))
+        allProds.append([prod, range(1, nSlides), nSlides])
+
+    params= {'allProds':allProds}
+
+    return render(request,"index.html",params)
 
 def about(request):
     return render(request,"about.html")

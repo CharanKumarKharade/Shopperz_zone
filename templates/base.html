@@ -5,7 +5,8 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>{%block title%}
+  <title>
+    {%block title%}
     {%endblock title%}
   </title>
   <meta name="Shopperz_Zone - delivering products at ease" content="Your one-stop shop for convenient online shopping.">
@@ -47,10 +48,9 @@
       <nav id="navmenu" class="navmenu">
         <ul>
           <li><a href="/" class="active">Home</a></li>
-          <li><a href="/blog">Blog</a></li>
           <li><a href="/about">About</a></li>
           <li><a href="/checkout">Checkout</a></li>
-          <li><a href="/">My Profile</a></li>
+          <li><a href="/profile">My Profile</a></li>
          <button type="button" class="nav-link scrollto bg-danger p-3 m-2 text-white"
          id="popcart" data-container="body" data-toggle="popover" data-placement="botton"
          data-html="true"> Cart(<span id="cart">0</span>)</button>
@@ -82,17 +82,14 @@
       <img src="{% static '/assets/img/hero-bg.jpg' %}" alt="" data-aos="fade-in">
 
       <div class="container text-center" data-aos="fade-up" data-aos-delay="100">
-        <div class="row justify-content-center">
-          <div class="col-lg-8">
-            <h2>Welcome to Shopperz_Zone</h2>
-            <p>We are providers for a pool of unique hand-made products</p>
-            <a href="#about" class="btn-get-started">Shop Now</a>
-          </div>
-        </div>
+        {%block content%}
+        
+        {%endblock content%}
       </div>
 
     </section><!-- /Hero Section -->
    {%block body%}
+
    {%endblock body%}
 
   </main>

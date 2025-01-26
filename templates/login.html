@@ -1,10 +1,13 @@
-{% extends 'authentication/baseauth.html' %}
+{% extends 'base.html' %}
+
 {% block title %}
-SignUp
+    Login
 {% endblock title %}
-{% block bodyforms %}
+
+{% block content %}
 <div class="card bg-white p-5 ">
-    <h3 class="text-dark">Sign Up</h3>
+    <h3 class="text-dark">Login</h3>
+    
     {% if messages %}
     <div class="container mt-3">
         {% for message in messages %}
@@ -26,26 +29,26 @@ SignUp
     </div>
 {% endif %}
 
-    <form action ="/controller/signup/" method="POST">
+
+    <form action="/controller/login/" method="POST" >
         {% csrf_token %}
         <br>
         <label for="email">Email</label>
         <div class="form-group">
             <input type="email" class="form-control p-2" id="email" name="email" required />
         </div>
-        <label for ="pass1">Password</label>
+        <label for="pass1">Password</label>
         <div class="form-group">
-            <input type = "password" class="form-control p-2" id="pass1" name="pass1" required/>
-        </div>
-        <label for ="pass2">Confirm Password</label>
-        <div class="form-group">
-            <input type = "password" class="form-control p-2" id="pass2" name="pass2" required/>
+            <input type="password" class="form-control p-2" id="pass1" name="pass1" required/>
         </div>
         <br>
-        <button type="submit" class="btn btn-dark">Sign Up</button>
+        <button type="submit" class="btn btn-dark">Login</button>
         <br>
-        Already a User? <a href="/controller/login">Login</a>
+        <span> Forget Password? <a href="/controller/request-password-reset/">Reset</a></span>
+    <br>
+    <br />
+        New User? <a href="/controller/signup">SignUp</a>
         <br>
     </form>
 </div>
-{% endblock bodyforms %}
+{% endblock content %}

@@ -14,8 +14,8 @@ Home
 <section id="portfolio" class="portfolio">
   <div class="container">
     {% for message in messages %}
-    <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
-      <strong>{{message}}</strong>
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+      <strong>{{ message }}</strong>
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
     {% endfor %}
@@ -56,7 +56,7 @@ Home
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="imageModalLabel">{{i.product_name}}</h5>
+                <h5 class="modal-title" id="imageModalLabel">{{ i.product_name }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class="modal-body">
@@ -76,10 +76,10 @@ Home
 </section>
 <!-- End Portfolio Section -->
 
-<!-- Cart Button -->
+{% comment %} <!-- Cart Button -->
 <button id="popcart" class="btn btn-primary" data-bs-toggle="popover" title="Shopping Cart">
     Cart <span id="cart">0</span>
-</button>
+</button> {% endcomment %}
 
 {% block script %}
 <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
@@ -87,23 +87,46 @@ Home
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
 
 <script>
+
+
+  if (localStorage.getItem('cart') == null) {
+   var cart = {};
+} else {
+   cart = JSON.parse(localStorage.getItem('cart'));
+}
+
+var totalPrice = 0;
+if ($.isEmptyObject(cart)) {
+   $('#items').append(`<p>Your cart is empty, please add some items to your cart before checking out!</p>`);
+} else {
+   for (var item in cart) {
+       let name = cart[item][1];
+       let qty = cart[item][0];
+       let itemPrice = parseFloat(cart[item][2]); // Ensure this is a number
+       totalPrice += qty * itemPrice;
+
+       let mystr = `<li class="list-group-item d-flex justify-content-between align-items-center">
+                        ${name}
+                        <div><b> Price : ${itemPrice}</b></div>
+                        <span class="badge badge-primary badge-pill">${qty}</span>
+                    </li>`;
+       $('#items').append(mystr);
+   }
+   document.getElementById('totalprice').innerHTML = totalPrice;
+   document.getElementById("amt").value = totalPrice; // Set the hidden input value
+}
+
+
   document.addEventListener('DOMContentLoaded', function() {
-    // Find out the cart from local storage
     var cart = localStorage.getItem('cart') ? JSON.parse(localStorage.getItem('cart')) : {};
-
-    // Initialize cart count to 0
     var cartCount = Object.keys(cart).length;
-
-    // Update cart if it exists
     updateCart(cart);
 
-    // Set the cart display to 0 if empty
     var cartElement = document.getElementById('cart');
     if (cartElement) {
-        cartElement.innerHTML = cartCount; // Set the cart count to the number of items
+        cartElement.innerHTML = cartCount;
     }
 
-    // Add or increment code
     $('.divpr').on('click', 'button.cart', function() {
         var idstr = this.id.toString();
         var qty, name, price;
@@ -112,38 +135,35 @@ Home
             qty = cart[idstr][0] + 1;
         } else {
             qty = 1;
-            name = document.getElementById('name' + idstr).innerHTML;
-            price = document.getElementById('price' + idstr).innerHTML;
+            name = document.getElementById('namepr' + idstr.slice(2)).innerHTML; // Corrected
+            price = document.getElementById('pricepr' + idstr.slice(2)).innerHTML; // Corrected
             cart[idstr] = [qty, name, price];
         }
         updateCart(cart);
         localStorage.setItem('cart', JSON.stringify(cart));
         
-        // Update cart count after adding an item
-        cartCount = Object.keys(cart).length; // Update cart count
+        cartCount = Object.keys(cart).length;
         if (cartElement) {
-            cartElement.innerHTML = cartCount; // Update the displayed cart count
+            cartElement.innerHTML = cartCount;
         }
     });
 
-    // Add popover to cart
     $('#popcart').popover({
-        html: true, // Allow HTML content
-        trigger: 'click' // Show popover on click
+        html: true,
+        trigger: 'click'
     });
     updatePopover(cart);
 
     function updatePopover(cart) {
-        console.log('We are inside update popover');
         var popStr = "<h5>Cart for your items in my shopping cart</h5><div class='mx-2 my-2'>";
         var i = 1;
         for (var item in cart) {
-            var nameElement = document.getElementById('name' + item);
+            var nameElement = document.getElementById('namepr' + item.slice(2)); // Corrected
             if (nameElement) {
                 popStr += "<b>" + i + "</b>. ";
                 popStr += nameElement.innerHTML.slice(0, 19) + "..." + "<b>" + cart[item][0] + "</b> Qty<br>";
             } else {
-                console.warn('Element with ID name' + item + ' not found.');
+                console.warn('Element with ID namepr' + item + ' not found.');
             }
             i++;
         }
@@ -163,7 +183,7 @@ Home
     function clearCart() {
         cart = JSON.parse(localStorage.getItem('cart'));
         for (var item in cart) {
-            var divElement = document.getElementById('div' + item);
+            var divElement = document.getElementById('divpr' + item.slice(2)); // Corrected
             if (divElement) {
                 divElement.innerHTML = '<button id="' + item + '" class="btn btn-success cart">Add to Cart</button>';
             }
@@ -177,12 +197,11 @@ Home
         var sum = 0;
         for (var item in cart) {
             sum += cart[item][0];
-            var divElement = document.getElementById('div' + item);
-            console.log('Trying to access:', 'div' + item); // Log the ID being accessed
+            var divElement = document.getElementById('divpr' + item.slice(2)); // Corrected
             if (divElement) {
                 divElement.innerHTML = "<button id='minus" + item + "' class='btn btn-success minus'>-</button> <span id='val" + item + "'>" + cart[item][0] + "</span> <button id='plus" + item + "' class='btn btn-success plus'> + </button>";
             } else {
-                console.warn('Element with ID div' + item + ' not found.');
+                console.warn('Element with ID divpr' + item + ' not found.');
             }
         }
         localStorage.setItem('cart', JSON.stringify(cart));
@@ -190,11 +209,9 @@ Home
         if (cartElement) {
             cartElement.innerHTML = sum;
         }
-        console.log(cart);
         updatePopover(cart);
     }
 
-    // If plus or minus button is clicked, change the cart as well as the display value
     $('.divpr').on("click", "button.minus", function() {
         var a = this.id.slice(7);
         if (cart['pr' + a]) {
